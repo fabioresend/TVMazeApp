@@ -10,6 +10,7 @@ import SwiftUI
 struct ShowListView: View {
     @StateObject private var viewModel = SeriesListViewModel()
     @State private var selectedShow: Show?
+    @State private var isSearchPresented = false
 
     private let columns = [
         GridItem(.flexible(), spacing: 20),
@@ -18,44 +19,54 @@ struct ShowListView: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                if viewModel.isLoading && viewModel.shows.isEmpty {
-                    LoadingView()
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+            VStack(spacing: 0) {
 
-                } else if let error = viewModel.error, viewModel.shows.isEmpty {
-                    ErrorView(error: error) {
-                        Task {
-                            await viewModel.refresh()
+                SearchBarView {
+                    isSearchPresented = true
+                }
+                .padding(.horizontal)
+                .padding(.top, 8)
+
+                ScrollView {
+                    if viewModel.isLoading && viewModel.shows.isEmpty {
+                        LoadingView()
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+                    } else if let error = viewModel.error, viewModel.shows.isEmpty {
+                        ErrorView(error: error) {
+                            Task {
+                                await viewModel.refresh()
+                            }
                         }
-                    }
-                    .padding()
-                } else {
-                    LazyVGrid(columns: columns, spacing: 20) {
-                        ForEach(viewModel.shows) { show in
-                            SeriesCardView(show: show)
-                                .onTapGesture {
-                                    selectedShow = show
-                                }
-                                .onAppear {
-                                    Task {
-                                        await viewModel.loadMoreIfNeeded(currentShow: show)
+                        .padding()
+                    } else {
+                        LazyVGrid(columns: columns, spacing: 20) {
+                            ForEach(viewModel.shows) { show in
+                                ShowCardView(show: show)
+                                    .onTapGesture {
+                                        selectedShow = show
                                     }
-                                }
-                        }
+                                    .onAppear {
+                                        Task {
+                                            await viewModel.loadMoreIfNeeded(currentShow: show)
+                                        }
+                                    }
+                            }
 
-                        if viewModel.isLoadingMore {
-                            ProgressView()
-                                .frame(maxWidth: .infinity)
-                                .gridCellColumns(columns.count)
-                                .gridCellAnchor(.center)
-                                .padding()
+                            if viewModel.isLoadingMore {
+                                ProgressView()
+                                    .frame(maxWidth: .infinity)
+                                    .gridCellColumns(columns.count)
+                                    .gridCellAnchor(.center)
+                                    .padding()
+                            }
                         }
+                        .padding()
                     }
-                    .padding()
                 }
             }
             .navigationTitle("TV Shows")
+            .navigationBarTitleDisplayMode(.large)
             .navigationDestination(item: $selectedShow) { show in
                 SeriesDetailView(show: show)
             }
@@ -67,12 +78,37 @@ struct ShowListView: View {
                     await viewModel.loadShows()
                 }
             }
+            .sheet(isPresented: $isSearchPresented) {
+                ShowSearchView()
+            }
         }
     }
 }
 
+struct SearchBarView: View {
+    let onTap: () -> Void
 
-struct SeriesCardView: View {
+    var body: some View {
+        HStack {
+            Image(systemName: "magnifyingglass")
+                .foregroundColor(.gray)
+                .padding(.leading, 12)
+
+            Text("Search TV shows...")
+                .foregroundColor(.gray)
+                .padding(.vertical, 12)
+
+            Spacer()
+        }
+        .background(Color(.systemGray6))
+        .cornerRadius(10)
+        .onTapGesture {
+            onTap()
+        }
+    }
+}
+
+struct ShowCardView: View {
     let show: Show
 
     var body: some View {

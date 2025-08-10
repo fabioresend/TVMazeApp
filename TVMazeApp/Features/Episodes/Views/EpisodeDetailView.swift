@@ -64,7 +64,7 @@ struct EpisodeDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button("Done") {
+                Button("Close") {
                     dismiss()
                 }
             }
