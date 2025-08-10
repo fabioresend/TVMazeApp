@@ -1,5 +1,5 @@
 //
-//  TVMazeAppApp.swift
+//  TVMazeApp.swift
 //  TVMazeApp
 //
 //  Created by Fabio Augusto Resende on 8/10/25.
@@ -9,10 +9,9 @@ import SwiftUI
 import SwiftData
 
 @main
-struct TVMazeAppApp: App {
+struct TVMazeApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -25,7 +24,6 @@ struct TVMazeAppApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
         }
         .modelContainer(sharedModelContainer)
     }
