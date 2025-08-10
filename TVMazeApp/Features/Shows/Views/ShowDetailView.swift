@@ -7,12 +7,12 @@
 
 import SwiftUI
 
-struct SeriesDetailView: View {
-    @StateObject private var viewModel: ShowDetailViewModel
+struct ShowDetailView: View {
+    @ObservedObject private var viewModel: ShowDetailViewModel
     @State private var selectedEpisode: Episode?
 
-    init(show: Show) {
-        _viewModel = StateObject(wrappedValue: ShowDetailViewModel(show: show))
+    init(viewModel: ShowDetailViewModel) {
+        self.viewModel = viewModel
     }
 
     var body: some View {
@@ -50,9 +50,6 @@ struct SeriesDetailView: View {
         }
         .navigationTitle(viewModel.show.name)
         .navigationBarTitleDisplayMode(.inline)
-        .task {
-            await viewModel.loadEpisodes()
-        }
         .sheet(item: $selectedEpisode) { episode in
             NavigationStack {
                 EpisodeDetailView(episode: episode)
@@ -61,8 +58,6 @@ struct SeriesDetailView: View {
     }
 }
 
-
-// MARK: - Header Section
 struct HeaderSection: View {
     let show: Show
 
@@ -242,3 +237,4 @@ struct SeasonSection: View {
         .cornerRadius(12)
     }
 }
+

@@ -23,9 +23,11 @@ final class ShowDetailViewModel: ObservableObject {
          networkService: NetworkServiceProtocol = NetworkService()) {
         self.show = show
         self.networkService = networkService
+        Task {
+            await loadEpisodes()
+        }
     }
 
-    // MARK: - Public Methods
     func loadEpisodes() async {
         guard !isLoading else { return }
 
@@ -52,14 +54,8 @@ final class ShowDetailViewModel: ObservableObject {
 
     private func groupEpisodesBySeason() {
         groupedEpisodes = Dictionary(grouping: episodes) { $0.season }
-
-        // Debug: Verificar o agrupamento
-        for (season, episodes) in groupedEpisodes.sorted(by: { $0.key < $1.key }) {
-            print("📺 Season \(season): \(episodes.count) episodes")
-        }
     }
 
-    // Método adicional para recarregar forçadamente
     func forceReload() async {
         episodes = []
         groupedEpisodes = [:]

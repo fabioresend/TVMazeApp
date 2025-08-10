@@ -8,7 +8,12 @@
 import SwiftUI
 
 struct ShowListView: View {
-    @StateObject private var viewModel = SeriesListViewModel()
+    @ObservedObject private var viewModel: ShowListViewModel
+
+    init(viewModel: ShowListViewModel) {
+        self.viewModel = viewModel
+    }
+
     @State private var selectedShow: Show?
     @State private var isSearchPresented = false
 
@@ -68,18 +73,13 @@ struct ShowListView: View {
             .navigationTitle("TV Shows")
             .navigationBarTitleDisplayMode(.large)
             .navigationDestination(item: $selectedShow) { show in
-                SeriesDetailView(show: show)
+                ShowDetailView(viewModel: ShowDetailViewModel(show: show))
             }
             .refreshable {
                 await viewModel.refresh()
             }
-            .task {
-                if viewModel.shows.isEmpty {
-                    await viewModel.loadShows()
-                }
-            }
             .sheet(isPresented: $isSearchPresented) {
-                ShowSearchView()
+                ShowSearchView(viewModel: ShowSearchViewModel())
             }
         }
     }

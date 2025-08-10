@@ -9,9 +9,13 @@ import SwiftUI
 
 struct ShowSearchView: View {
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var viewModel = ShowSearchViewModel()
+    @ObservedObject private var viewModel: ShowSearchViewModel
     @State private var selectedShow: Show?
     @FocusState private var isSearchFieldFocused: Bool
+
+    init(viewModel: ShowSearchViewModel) {
+        self.viewModel = viewModel
+    }
 
     private let columns = [
         GridItem(.flexible(), spacing: 20),
@@ -49,7 +53,7 @@ struct ShowSearchView: View {
             )
             .searchFocused($isSearchFieldFocused)
             .navigationDestination(item: $selectedShow) { show in
-                SeriesDetailView(show: show)
+                ShowDetailView(viewModel: ShowDetailViewModel(show: show))
             }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

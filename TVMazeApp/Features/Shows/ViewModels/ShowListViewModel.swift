@@ -9,25 +9,25 @@ import Foundation
 import Combine
 
 @MainActor
-final class SeriesListViewModel: ObservableObject {
-    // MARK: - Published Properties
+final class ShowListViewModel: ObservableObject {
+
     @Published var shows: [Show] = []
     @Published var isLoading = false
     @Published var isLoadingMore = false
     @Published var error: Error?
     @Published var hasMorePages = true
 
-    // MARK: - Private Properties
     private let networkService: NetworkServiceProtocol
     private var currentPage = 0
     private var cancellables = Set<AnyCancellable>()
 
-    // MARK: - Initialization
     init(networkService: NetworkServiceProtocol = NetworkService()) {
         self.networkService = networkService
+        Task {
+            await loadShows()
+        }
     }
 
-    // MARK: - Public Methods
     func loadShows() async {
         guard !isLoading else { return }
 

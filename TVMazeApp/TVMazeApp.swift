@@ -12,7 +12,7 @@ import SwiftData
 struct TVMazeApp: App {
     var body: some Scene {
         WindowGroup {
-            ShowListView()
+            MainContentView()
         }
     }
 }
