@@ -8,7 +8,7 @@
 import Foundation
 import SwiftData
 
-struct TVShow: Codable, Identifiable, Hashable {
+struct Show: Codable, Identifiable, Hashable {
     let id: Int
     let name: String
     let genres: [String]?
@@ -40,7 +40,7 @@ struct Rating: Codable, Hashable {
 
 struct SearchShowResult: Codable {
     let score: Double
-    let show: TVShow
+    let show: Show
 }
 
 struct Embedded: Codable, Hashable {
