@@ -10,9 +10,48 @@ import SwiftData
 
 @main
 struct TVMazeApp: App {
+    let container: ModelContainer
+
+    init() {
+        do {
+            container = try ModelContainer(for: FavoriteShow.self)
+        } catch {
+            fatalError("Failed to create ModelContainer: \(error)")
+        }
+    }
+
     var body: some Scene {
         WindowGroup {
             MainContentView()
+        }
+        .modelContainer(container)
+    }
+}
+
+struct MainContentView: View {
+    @StateObject private var authManager = AuthenticationManager()
+    @Environment(\.modelContext) private var modelContext
+    @State private var favoritesManager: FavoritesManager?
+
+    var body: some View {
+        Group {
+            if let favoritesManager {
+                if authManager.isAuthenticated || !authManager.hasSetupPIN {
+                    MainTabView(authManager: authManager,
+                                favoritesManager: favoritesManager)
+                } else if authManager.hasSetupPIN {
+                    AuthenticationView(authManager: authManager)
+                } else {
+                    PINSetupView(authManager: authManager)
+                }
+            } else {
+                LoadingView()
+            }
+        }
+        .onAppear {
+            if favoritesManager == nil {
+                favoritesManager = FavoritesManager(modelContext: modelContext)
+            }
         }
     }
 }

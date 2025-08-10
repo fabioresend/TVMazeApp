@@ -18,11 +18,14 @@ final class ShowDetailViewModel: ObservableObject {
     @Published var error: Error?
 
     private let networkService: NetworkServiceProtocol
+    let favoritesManager: FavoritesManager
 
     init(show: Show,
-         networkService: NetworkServiceProtocol = NetworkService()) {
+         networkService: NetworkServiceProtocol = NetworkService(),
+         favoritesManager: FavoritesManager) {
         self.show = show
         self.networkService = networkService
+        self.favoritesManager = favoritesManager
         Task {
             await loadEpisodes()
         }

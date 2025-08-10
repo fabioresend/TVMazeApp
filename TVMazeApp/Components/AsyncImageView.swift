@@ -29,7 +29,7 @@ struct AsyncImageView: View {
                         .foregroundColor(.gray)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .background(Color(.systemGray6))
-                @unknown default:
+                default:
                     EmptyView()
                 }
             }

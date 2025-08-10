@@ -9,13 +9,20 @@ import SwiftUI
 
 struct MainTabView: View {
     @ObservedObject var authManager: AuthenticationManager
+    let favoritesManager: FavoritesManager
 
     var body: some View {
         TabView {
-            ShowListView(viewModel: ShowListViewModel())
+            ShowListView(viewModel: ShowListViewModel(favoritesManager: favoritesManager))
                 .tabItem {
                     Image(systemName: "tv")
                     Text("Shows")
+                }
+
+            FavoriteListView(favoritesManager: favoritesManager)
+                .tabItem {
+                    Image(systemName: "heart")
+                    Text("Favorites")
                 }
 
             SettingsView(viewModel: SettingsViewModel(authManager: authManager))
@@ -23,22 +30,6 @@ struct MainTabView: View {
                     Image(systemName: "gearshape")
                     Text("Settings")
                 }
-        }
-    }
-}
-
-struct MainContentView: View {
-    @StateObject private var authManager = AuthenticationManager()
-
-    var body: some View {
-        Group {
-            if authManager.isAuthenticated {
-                MainTabView(authManager: authManager)
-            } else if authManager.hasSetupPIN {
-                AuthenticationView(authManager: authManager)
-            } else {
-                PINSetupView(authManager: authManager)
-            }
         }
     }
 }

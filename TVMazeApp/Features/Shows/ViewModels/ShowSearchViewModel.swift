@@ -21,8 +21,12 @@ final class ShowSearchViewModel: ObservableObject {
     private var searchTask: Task<Void, Never>?
     private var cancellables = Set<AnyCancellable>()
 
-    init(networkService: NetworkServiceProtocol = NetworkService()) {
+    let favoritesManager: FavoritesManager
+
+    init(networkService: NetworkServiceProtocol = NetworkService(),
+         favoritesManager: FavoritesManager) {
         self.networkService = networkService
+        self.favoritesManager = favoritesManager
         setupSearchDebounce()
     }
 

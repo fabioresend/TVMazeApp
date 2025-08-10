@@ -36,10 +36,12 @@ struct ShowSearchView: View {
                     ScrollView {
                         LazyVGrid(columns: columns, spacing: 20) {
                             ForEach(viewModel.searchResults) { show in
-                                ShowCardView(show: show)
-                                    .onTapGesture {
-                                        selectedShow = show
-                                    }
+                                ShowCardView(show: show,
+                                             favoritesManager: viewModel.favoritesManager
+                                )
+                                .onTapGesture {
+                                    selectedShow = show
+                                }
                             }
                         }
                         .padding()
@@ -53,7 +55,8 @@ struct ShowSearchView: View {
             )
             .searchFocused($isSearchFieldFocused)
             .navigationDestination(item: $selectedShow) { show in
-                ShowDetailView(viewModel: ShowDetailViewModel(show: show))
+                ShowDetailView(viewModel: ShowDetailViewModel(show: show,
+                                                              favoritesManager: viewModel.favoritesManager))
             }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

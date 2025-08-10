@@ -18,7 +18,8 @@ struct ShowDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
-                HeaderSection(show: viewModel.show)
+                HeaderSection(favoritesManager: viewModel.favoritesManager,
+                              show: viewModel.show)
 
                 InfoSection(show: viewModel.show)
 
@@ -59,6 +60,7 @@ struct ShowDetailView: View {
 }
 
 struct HeaderSection: View {
+    let favoritesManager: FavoritesManager
     let show: Show
 
     var body: some View {
@@ -89,6 +91,10 @@ struct HeaderSection: View {
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
+
+                FavoriteShowButton(show: show,
+                                   favoritesManager: favoritesManager,
+                                   style: .textAndImage)
             }
 
             Spacer()
@@ -237,4 +243,3 @@ struct SeasonSection: View {
         .cornerRadius(12)
     }
 }
-

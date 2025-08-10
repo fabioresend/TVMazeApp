@@ -20,9 +20,11 @@ final class ShowListViewModel: ObservableObject {
     private let networkService: NetworkServiceProtocol
     private var currentPage = 0
     private var cancellables = Set<AnyCancellable>()
+    let favoritesManager: FavoritesManager
 
-    init(networkService: NetworkServiceProtocol = NetworkService()) {
+    init(networkService: NetworkServiceProtocol = NetworkService(), favoritesManager: FavoritesManager) {
         self.networkService = networkService
+        self.favoritesManager = favoritesManager
         Task {
             await loadShows()
         }

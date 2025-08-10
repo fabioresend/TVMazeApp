@@ -47,15 +47,17 @@ struct ShowListView: View {
                     } else {
                         LazyVGrid(columns: columns, spacing: 20) {
                             ForEach(viewModel.shows) { show in
-                                ShowCardView(show: show)
-                                    .onTapGesture {
-                                        selectedShow = show
+                                ShowCardView(show: show,
+                                             favoritesManager: viewModel.favoritesManager
+                                )
+                                .onTapGesture {
+                                    selectedShow = show
+                                }
+                                .onAppear {
+                                    Task {
+                                        await viewModel.loadMoreIfNeeded(currentShow: show)
                                     }
-                                    .onAppear {
-                                        Task {
-                                            await viewModel.loadMoreIfNeeded(currentShow: show)
-                                        }
-                                    }
+                                }
                             }
 
                             if viewModel.isLoadingMore {
@@ -73,13 +75,15 @@ struct ShowListView: View {
             .navigationTitle("TV Shows")
             .navigationBarTitleDisplayMode(.large)
             .navigationDestination(item: $selectedShow) { show in
-                ShowDetailView(viewModel: ShowDetailViewModel(show: show))
+                ShowDetailView(viewModel: ShowDetailViewModel(show: show,
+                                                              favoritesManager: viewModel.favoritesManager
+                                                             ))
             }
             .refreshable {
                 await viewModel.refresh()
             }
             .sheet(isPresented: $isSearchPresented) {
-                ShowSearchView(viewModel: ShowSearchViewModel())
+                ShowSearchView(viewModel: ShowSearchViewModel(favoritesManager: viewModel.favoritesManager))
             }
         }
     }
@@ -109,16 +113,27 @@ struct SearchBarView: View {
 }
 
 struct ShowCardView: View {
-    let show: Show
+    @State var show: Show
+    let favoritesManager: FavoritesManager
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            AsyncImageView(
-                url: show.image?.medium,
-                placeholder: "tv"
-            )
-            .aspectRatio(0.68, contentMode: .fit)
-            .cornerRadius(12)
+            ZStack(alignment: .topTrailing) {
+                AsyncImageView(
+                    url: show.image?.medium,
+                    placeholder: "tv"
+                )
+                .aspectRatio(0.68, contentMode: .fit)
+                .cornerRadius(12)
+
+                FavoriteShowButton(show: show,
+                                   favoritesManager: favoritesManager,
+                                   style: .image
+                )
+                .padding(8)
+                .background(.thickMaterial, in: Circle())
+                .padding(8)
+            }
 
             Text(show.name)
                 .font(.headline)
