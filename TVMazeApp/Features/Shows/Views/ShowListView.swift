@@ -22,7 +22,7 @@ struct ShowListView: View {
                 if viewModel.isLoading && viewModel.shows.isEmpty {
                     LoadingView()
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    
+
                 } else if let error = viewModel.error, viewModel.shows.isEmpty {
                     ErrorView(error: error) {
                         Task {
@@ -56,9 +56,9 @@ struct ShowListView: View {
                 }
             }
             .navigationTitle("TV Shows")
-//            .navigationDestination(item: $selectedShow) { show in
-//                SeriesDetailView(show: show)
-//            }
+            .navigationDestination(item: $selectedShow) { show in
+                SeriesDetailView(show: show)
+            }
             .refreshable {
                 await viewModel.refresh()
             }

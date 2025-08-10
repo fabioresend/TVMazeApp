@@ -15,4 +15,8 @@ struct Episode: Codable, Identifiable, Hashable {
     let summary: String?
     let image: ShowImage?
     let rating: Rating?
+
+    var episodeCode: String {
+        String(format: "S%02dE%02d", season, number)
+    }
 }
