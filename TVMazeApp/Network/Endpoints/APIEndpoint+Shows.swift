@@ -11,7 +11,6 @@ extension APIEndpoint {
     enum Shows: Endpoint {
         case list(page: Int)
         case search(query: String)
-        case details(id: Int)
         case episodes(showId: Int)
 
         func url() throws -> URL {
@@ -25,10 +24,6 @@ extension APIEndpoint {
             case .search(let query):
                 components.path = "/search/shows"
                 components.queryItems = [URLQueryItem(name: "q", value: query)]
-
-            case .details(let id):
-                components.path = "/shows/\(id)"
-                components.queryItems = [URLQueryItem(name: "embed", value: "episodes")]
 
             case .episodes(let showId):
                 components.path = "/shows/\(showId)/episodes"

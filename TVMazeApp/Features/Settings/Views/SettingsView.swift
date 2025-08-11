@@ -18,7 +18,6 @@ struct SettingsView: View {
         NavigationStack {
             List {
                 authenticationSection
-                securityInfoSection
             }
             .navigationTitle("Settings")
             .sheet(isPresented: $viewModel.showingPINSetup) {
@@ -111,20 +110,6 @@ struct SettingsView: View {
                 Text("Biometric Authentication")
                     .font(.headline)
                 Text("Not available on this device")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            }
-        }
-    }
-
-    private var securityInfoSection: some View {
-        Section("Security Info") {
-            Label("Your PIN is securely stored in the device keychain", systemImage: "info.circle")
-                .font(.caption)
-                .foregroundColor(.secondary)
-
-            if viewModel.biometricType != .none {
-                Label("Biometric data never leaves your device", systemImage: "shield.checkered")
                     .font(.caption)
                     .foregroundColor(.secondary)
             }

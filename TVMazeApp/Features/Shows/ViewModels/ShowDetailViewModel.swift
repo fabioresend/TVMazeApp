@@ -38,15 +38,9 @@ final class ShowDetailViewModel: ObservableObject {
         error = nil
 
         do {
-            // Try to get episodes from embedded data first
-            if let embeddedEpisodes = show.embedded?.episodes {
-                self.episodes = embeddedEpisodes
-            } else {
-                // Fetch episodes separately
-                let fetchedEpisodes: [Episode] = try await networkService.fetch(APIEndpoint.Shows.episodes(showId: show.id))
-                self.episodes = fetchedEpisodes
-            }
-
+            let fetchedEpisodes: [Episode] = try await networkService.fetch(APIEndpoint.Shows.episodes(showId: show.id))
+            self.episodes = fetchedEpisodes
+            
             groupEpisodesBySeason()
         } catch {
             self.error = error

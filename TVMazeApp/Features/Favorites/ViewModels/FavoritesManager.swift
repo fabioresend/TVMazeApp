@@ -23,7 +23,6 @@ class FavoritesManager {
         loadFavorites()
     }
 
-    // MARK: - Public Methods
     func isFavorite(_ show: Show) -> Bool {
         favoriteShowIds.contains(show.id)
     }
