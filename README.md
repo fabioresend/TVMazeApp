@@ -1,17 +1,27 @@
 # TVMazeApp
 
-Technology Stack
+**Technology Stack**
 
-SwiftUI - Declarative UI framework for modern iOS development
+- SwiftUI - Declarative UI framework for modern iOS development
+- SwiftData - Apple's modern persistence framework with type-safe queries
+- MVVM Architecture - Clean separation of concerns with testable ViewModels
+- Async/Await - Modern concurrency for all network operations
+- URLSession - Native networking with protocol-based design for testability
+- LocalAuthentication - Biometric security (Face ID/Touch ID) with Keychain storage
+- XCTest - Comprehensive unit testing with 23 test cases covering ViewModels and networking
 
-SwiftData - Apple's modern persistence framework with type-safe queries
+-----------------------
+**Requirements**
 
-MVVM Architecture - Clean separation of concerns with testable ViewModels
+- iOS 17.0+
+- Xcode 15.0+
+- Swift 5.9+
 
-Async/Await - Modern concurrency for all network operations
 
-URLSession - Native networking with protocol-based design for testability
+------------------------
 
-LocalAuthentication - Biometric security (Face ID/Touch ID) with Keychain storage
+**Installation**
 
-XCTest - Comprehensive unit testing with some test cases covering networking, performance...
+- Clone the repository 
+- Open TVMazeApp.xcodeproj in Xcode
+- Build and run the project
